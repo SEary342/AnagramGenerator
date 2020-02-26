@@ -8,6 +8,7 @@ def main():
         if letters == "exit":
             break
         elif letters == "reset":
+            letters = ""
             exact_order_mode = startup_prompt()
             continue
         else:
@@ -20,6 +21,7 @@ def main():
             if letter_order == "exit":
                 break
             elif letter_order == "reset":
+                letters = ""
                 exact_order_mode = startup_prompt()
                 continue
             letter_order = list(letter_order)
