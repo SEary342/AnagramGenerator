@@ -3,7 +3,7 @@ def main():
     exact_order_mode = startup_prompt()
     letters = ""
     while True:
-        if letters == "" or not exact_order_mode:
+        if letters in ["", "reset", "exit"] or not exact_order_mode:
             letters = available_letters_prompt()
         if letters == "exit":
             break
