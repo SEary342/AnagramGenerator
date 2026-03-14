@@ -15,23 +15,23 @@ def main():
             letters = list(letters)
         letter_order = []
         if exact_order_mode:
-            letter_order = str(
-                input("Enter word to search for (?'s for unknown letters): ")
-            ).lower()
-            if letter_order == "exit":
-                break
-            elif letter_order == "reset":
-                letters = ""
-                exact_order_mode = startup_prompt()
-                continue
-            letter_order = list(letter_order)
+            letter_order = list(
+                str(
+                    input("Enter word to search for (?'s for unknown letters): ")
+                ).lower()
+            )
+            known_letters = list(
+                str(input("Enter known letters (leave blank if none): ")).lower()
+            )
             if len(letter_order) > len(letters):
                 print(
                     "The provided word to search for must not be longer than the"
                     + "available letters"
                 )
                 continue
-        letter_combos = get_words(letters, word_set, exact_order_mode, letter_order)
+        letter_combos = get_words(
+            letters, word_set, exact_order_mode, letter_order, known_letters
+        )
         print(f"\nFound words:\n{letter_combos}\n")
 
 
@@ -56,7 +56,11 @@ def available_letters_prompt():
 
 
 def get_words(
-    letters: list, word_set: set, exact_order: bool = False, letter_order: list = []
+    letters: list,
+    word_set: set,
+    exact_order: bool = False,
+    letter_order: list = [],
+    known_letters: list = [],
 ) -> dict:
     if exact_order:
         max_word_len = len(letter_order)
@@ -71,12 +75,20 @@ def get_words(
 
         for item in base_list:
             local_letters = letters.copy()
-            local_order = letter_order.copy()
+
+            if known_letters:
+                known_letter_check = True
+                for k_letter in known_letters:
+                    if k_letter not in item:
+                        known_letter_check = False
+                if not known_letter_check:
+                    continue
+
             letter_list = list(item.lower())
             for i, letter in enumerate(letter_list):
                 if exact_order:
                     if letter in local_letters and (
-                        letter == local_order[i] or local_order[i] == "?"
+                        letter == letter_order[i] or letter_order[i] == "?"
                     ):
                         local_letters.remove(letter)
                         if i == len(letter_list) - 1:
